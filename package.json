@@ -1,4 +1,7 @@
 {
   "name": "db-mongoose",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "mongoose": "^4.12.6"
+  }
 }
