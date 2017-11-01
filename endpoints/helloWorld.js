@@ -1,18 +1,23 @@
+const mongoose = require('mongoose');
+mongoose.Promise = Promise;
+const hitCount = new mongoose.Schema({});
+const Hit = mongoose.model('Hit', hitCount);
+
 /*
- * Edit the description of your service here
+ * This is a simple build demo to show a connection to a database
  *
- * THESE COMMENTS ARE YOUR DOCUMENTATION!
- * You can view the full docs for our documentation format at:
- * https://docs.readme.build/docs/writing-documentation
+ * Each time the service is called, it creates a new `hit`, then
+ * returns with a total count of hits stored in the database.
  *
- * Write a description and define your API in this
- * code block.
- *
- * @param {string} name=Name Name of the person
- * @throws {ValidationError} Must provide all required fields
- * @returns {string} A very friendly greeting
+ * @returns {number} Number of times this service has been called
  */
 module.exports = (data, api) => {
-  if (!data.name) return api.error('ValidationError');
-  api.success('Hey there ' + data.name + '! It worked!\n\nNow edit helloWorld.js to write your own code!');
+  mongoose.connect('mongodb://localhost/build-test', { useMongoClient: true });
+  const hit = new Hit();
+  hit.save().then(() => {
+    Hit.count({}).then(count => {
+      api.success(count);
+      mongoose.disconnect();
+    })
+  });
 };
